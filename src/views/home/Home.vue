@@ -1,6 +1,6 @@
 <template>
 <div id="app-wrapper">
-    这里是首页
+    <el-button>这里是首页</el-button>
 </div>
 </template>
 <script lang="ts">
