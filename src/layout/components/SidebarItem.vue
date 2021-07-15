@@ -1,22 +1,30 @@
 <template>
-    <!-- el-submenu 分组  el-menu-item 根节点 -->
-        <el-submenu index="1">
-            <template #title>
-                <i class="el-icon-location"></i>
-                <span>导航一</span>
-            </template>
-            <el-menu-item-group title="分组2">
-                <el-menu-item index="1-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-                <template #title>选项4</template>
-                <el-menu-item index="1-4-1">选项1</el-menu-item>
-            </el-submenu>
-        </el-submenu>
+  <!-- el-submenu 分组  el-menu-item 根节点 -->
+  <div>
+    <div v-if="isChild">
+      <el-menu-item :index="basePath">{{ item?.meta.title }}</el-menu-item>
+    </div>
+    <el-submenu v-else>
+      <template #title>{{ item?.meta.title }}</template>
+      <sidebar-item 
+      v-for="child in item?.children" 
+      :key="child.name" 
+      :item="child"
+      :base-path="basePath+'/'+child.path"
+       />
+    </el-submenu>
+  </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
-export default defineComponent({
-    name: "SidebarItem"
+<script lang="ts" setup="computed">
+import { defineProps, computed } from "vue"
+const { item,basePath } = defineProps({
+  item: Object,
+  basePath:String
+})
+console.log(basePath, "basePath????")
+const isChild = computed(() => {
+  if (item?.children) {return false}
+    return true
+
 })
 </script>
