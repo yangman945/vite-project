@@ -1,10 +1,10 @@
 <template>
   <!-- el-submenu 分组  el-menu-item 根节点 -->
-  <div>
+  <div v-if="!item?.hidden">
     <div v-if="isChild">
       <el-menu-item :index="basePath">{{ item?.meta.title }}</el-menu-item>
     </div>
-    <el-submenu v-else>
+    <el-submenu  :index="item?.path" v-else>
       <template #title>{{ item?.meta.title }}</template>
       <sidebar-item 
       v-for="child in item?.children" 

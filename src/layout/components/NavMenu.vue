@@ -1,6 +1,7 @@
 <template>
   <el-menu 
-  :default-active="activeMenu " 
+  :default-active="activeMenu" 
+  :router="true"
   class="el-menu-vertical-demo" 
   @open="handleOpen" @close="handleClose">
     <sidebar-item 
@@ -16,10 +17,11 @@ import {computed} from 'vue'
 import SidebarItem from "./SidebarItem.vue"
 import { useRoute } from "vue-router"
 import {routes} from '@/router'
-// 默认激活菜单
+// 配置默认激活菜单
 const activeMenu = computed(() => {
   const route = useRoute();
   const { meta, path } = route;
+  console.log( meta,"meta")
   if (meta.activeMenu) {
     return meta.activeMenu;
   }

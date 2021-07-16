@@ -1,7 +1,6 @@
 <template>
 <div id="app-wrapper">
-    商品页A
-    <router-link to="/goods/goodslistA_detail">详情</router-link>
+    商品页A的详情
 </div>
 </template>
 <script lang="ts">
