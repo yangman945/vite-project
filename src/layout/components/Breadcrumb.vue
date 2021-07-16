@@ -10,7 +10,7 @@
 </template>
 <script lang="ts" setup>
 import { compile } from "path-to-regexp"
-import { reactive, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
     const levelList = ref(null)
@@ -42,6 +42,6 @@ import { useRoute, useRouter } from "vue-router"
       router.push(pathCompile(path))
     }
     getBreadcrumb()
-    watch(route, getBreadcrumb)
-    console.log(levelList.value,"levelList")
+    console.log(route,'routeroute')
+    watch(()=>route.path, getBreadcrumb)
 </script>
