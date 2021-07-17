@@ -7,6 +7,7 @@
     <div class="main-container">
       <div class="layout-right-top">
         <Breadcrumb />
+        <MenuTabs />
       </div>
       <div class="layout-right-content">
         <app-main />
@@ -17,7 +18,8 @@
 <script lang="ts" setup>
 import AppMain from "./components/AppMain.vue"
 import NavMenu from "./components/NavMenu.vue"
-import Breadcrumb from "./components//Breadcrumb.vue"
+import Breadcrumb from "./components/Breadcrumb.vue"
+import MenuTabs from "./components/MenuTabs.vue"
 </script>
 <style lang="scss" scoped>
 #app-wrapper {
