@@ -15,13 +15,12 @@
     </el-submenu>
   </div>
 </template>
-<script lang="ts" setup="computed">
-import { defineProps, computed } from "vue"
+<script lang="ts" setup>
+import {  computed } from "vue"
 const { item,basePath } = defineProps({
   item: Object,
   basePath:String
 })
-console.log(basePath, "basePath????")
 const isChild = computed(() => {
   if (item?.children) {return false}
     return true

@@ -2,7 +2,8 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
 import Layout from "lays/index.vue"
 import AppMain from "lays/components/AppMain.vue"
 export type AppRouteRecordRaw = RouteRecordRaw & {
-  hidden?: boolean
+  hidden?: boolean,
+  name:string
 }
 type BreadcrumbItem = {
   path:string,
@@ -12,8 +13,8 @@ type BreadcrumbAry = BreadcrumbItem[] | Boolean
 export const routes = [
   {
     path: "/",
-    name: "layout",
     redirect: "/home",
+    name: "layout",
     component: Layout,
     children: [
       {
@@ -21,7 +22,8 @@ export const routes = [
         name: "home",
         component: () => import("../views/home/Home.vue"),
         meta: {
-          title: "首页"
+          title: "首页",
+          keepAlive:true
         }
       },
       {
@@ -38,7 +40,8 @@ export const routes = [
             name: "goodslistA",
             component: () => import("../views/goods/GoodslistA.vue"),
             meta: {
-              title: "商品A"
+              title: "商品A",
+              keepAlive:true
             }
           },
           {
@@ -57,7 +60,8 @@ export const routes = [
             component: () => import("../views/goods/GoodslistB.vue"),
             meta: {
               title: "商品B",
-              breadcrumb:false, //不显示面包屑
+              keepAlive:true,
+              breadcrumb:false //不显示面包屑
             }
           },
           {
@@ -75,6 +79,7 @@ export const routes = [
                 component: () => import("../views/goods/spec/specs.vue"),
                 meta: {
                   title: "规格A",
+                  keepAlive:true,
                   breadcrumb:[
                     {path:'/home',meta:{
                       title:'你好'

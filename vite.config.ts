@@ -14,7 +14,8 @@ export default defineConfig({
       "plugs": path.resolve(__dirname, "src/plugins"),
       "comps": path.resolve(__dirname, "src/components"),
       "styles": path.resolve(__dirname, "src/styles"),
-      "router": path.resolve(__dirname, "src/router")
+      "router": path.resolve(__dirname, "src/router"),
+      "store": path.resolve(__dirname, "src/store")
     }
   }
 })
