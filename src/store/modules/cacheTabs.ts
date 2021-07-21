@@ -12,15 +12,15 @@ export type TabbarType = {
 }
 const state:CacheType = {
     cacheViewsAry:[],
-    tabBarAry:[]
+    tabBarAry:[{path:'/',title:"首页"}]
 }
 const mutations = {
     ADD_CACHEVIEW_ITEM(state:CacheType,data:string[]){
-        
         state.cacheViewsAry = data
     },
     ADD_TABBAR_ITEM(state:CacheType,data:TabbarType[]){
         state.tabBarAry = data
+        console.log(state.tabBarAry,"执行吗")
     },
 }
 const actions = {

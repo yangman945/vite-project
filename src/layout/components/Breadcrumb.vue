@@ -42,6 +42,5 @@ import { useRoute, useRouter } from "vue-router"
       router.push(pathCompile(path))
     }
     getBreadcrumb()
-    console.log(route,'routeroute')
     watch(()=>route.path, getBreadcrumb)
 </script>
