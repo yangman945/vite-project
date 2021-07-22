@@ -21,7 +21,6 @@ import {routes} from '@/router'
 const activeMenu = computed(() => {
   const route = useRoute();
   const { meta, path } = route;
-  console.log( meta,"meta")
   if (meta.activeMenu) {
     return meta.activeMenu;
   }
