@@ -5,7 +5,9 @@
 </template>
 <script lang="ts">
 import { defineComponent} from "vue"
-export default defineComponent({})
+export default defineComponent({
+    name:"goodslistAdetail"
+})
 </script>
 <style lang="scss" scoped>
 #app-wrapper{}

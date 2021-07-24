@@ -8,7 +8,8 @@ export type CacheType = {
 export type TagsType = {
     path:string,
     title:string,
-    name:string
+    name:string,
+    isFixdeKeepAlive:boolean
 }
 const state:CacheType = {
     cacheViewsAry:[],
@@ -21,6 +22,14 @@ const mutations = {
     ADD_TAGS_ITEM(state:CacheType,data:TagsType){
         state.tagsViewsAry.push(data)
     },
+    // 关闭自身
+    CLOSE_SELF_ITEM(state:CacheType,index:number){},
+    // 关闭其他
+    CLOSE_ELSE_ITEM(state:CacheType,index:number){
+        state.tagsViewsAry.splice(index,1)
+    },
+    // 批量关闭
+    CLOSE_BATCH_ITEM(state:CacheType,type:string){},
 }
 const actions = {
     // 校验当前访问的路由是否已经存在
@@ -29,16 +38,20 @@ const actions = {
         return state.cacheViewsAry.includes(name)
     },
     // 创建缓存路由名称
-    createCacheView({state,commit,dispatch}:any,name:string){
+    createCacheView({state,commit}:any,name:string){
         if(!state.cacheViewsAry.includes(name)){
             commit('ADD_CACHEVIEW_ITEM',name)
         }
     },
     // 创建缓存标签
-    createTags({state,commit,dispatch}:any,data:TagsType){
+    createTags({state,commit}:any,data:TagsType){
         if(!state.cacheViewsAry.includes(data.name)){
             commit('ADD_TAGS_ITEM',data)
         }  
+    },
+    closeTagsItem({state,commit}:any,data:TagsType){
+        const index = state.cacheViewsAry.indexOf(data.name)
+        commit('CLOSE_ELSE_ITEM',index)
     },
 }
 export default {

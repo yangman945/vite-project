@@ -1,39 +1,79 @@
 <template>
-  <el-tabs type="border-card"  v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane v-for="item in tagsAry" :key="item.path" :label="item.title" :name="item.name">
-      {{item.name}}
-    </el-tab-pane>
-  </el-tabs>
+  <div class="tags-components">
+    <router-link 
+    v-for="item in tagsAry" 
+    :key="item.name" 
+    :to="{ path: item.path }" 
+    :class="[isActive(item) ? 'active' : '','tags-view-item']">
+      <span>{{ item.title }}</span>
+      <i 
+      v-if="!item.isFixdeKeepAlive" 
+      class="el-icon-circle-close"
+      @click.prevent.stop="closeTagItem(item)"
+      ></i>
+    </router-link>
+  </div>
 </template>
 <script lang="ts" setup>
-import {computed,watch} from 'vue'
-import {useStore} from 'vuex'
-import { useRoute,useRouter } from "vue-router"
-import TagsType from 'store/modules/tagsView'
+import { computed, watch } from "vue"
+import { useStore } from "vuex"
+import { useRoute } from "vue-router"
+import TagsType from "store/modules/tagsView"
 const store = useStore()
 const route = useRoute()
-const router = useRouter()
-let activeName:string = '' // 当前激活项
+const tagsAry = computed(() => store.getters.tagsViewsAry)
 
-const tagsAry = computed(()=>store.getters.tagsViewsAry)
-console.log(tagsAry.value)
-const handleClick = <T,R>(tab:T, event:R) => {
-  router.push({
-    name:tab.props.name
-  })
+const isActive = (item: TagsType): boolean => {
+  return item.path === route.path
+}
+const closeTagItem = (item: TagsType): void => {
+  if(isActive(item)){
+    // 关闭自身
+    console.log('关闭自身')
+  }else{
+    // 关闭其他
+    console.log('关闭其他')
+    store.dispatch('tagsView/closeTagsItem', item)
+  }
 }
 const getTagsView = () => {
-  const {path,name,meta} = route
-  activeName = name as string
-  const tagsItem:TagsType = {
-    path:path,
-    name:name,
-    title:meta.title
-  } 
-  store.dispatch('tagsView/createTags', tagsItem)
-  store.dispatch('tagsView/createCacheView', name)
-  console.log(activeName,"activeName")
+  const { path, name, meta } = route
+  const tagsItem: TagsType = {
+    path: path,
+    name: name,
+    title: meta.title,
+    isFixdeKeepAlive: meta.isFixdeKeepAlive ? true : false
+  }
+  store.dispatch("tagsView/createTags", tagsItem)
+  store.dispatch("tagsView/createCacheView", name)
 }
-watch(()=>route.path, getTagsView)
+watch(() => route.path, getTagsView)
 getTagsView()
 </script>
+<style lang="scss" scoped>
+.tags-components {
+  .tags-view-item {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    height: 26px;
+    line-height: 25px;
+    border: 1px solid rgba(124, 141, 181, 0.3);
+    border-radius: 4px;
+    color: #495060;
+    background: #fff;
+    padding: 0 8px;
+    font-size: 12px;
+    margin-left: 5px;
+    margin-top: 4px;
+    box-sizing: border-box;
+    &.active {
+        background-color: #5DDAB4;
+        color: #fff;
+      }
+    i{
+      font-size: 20px;
+    }
+  }
+}
+</style>
