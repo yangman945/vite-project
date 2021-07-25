@@ -1,3 +1,4 @@
+import { resolve } from "path/posix"
 import {Module} from "vuex"
 import { State } from ".."
 
@@ -23,10 +24,13 @@ const mutations = {
         state.tagsViewsAry.push(data)
     },
     // 关闭自身
-    CLOSE_SELF_ITEM(state:CacheType,index:number){},
+    CLOSE_SELF_ITEM(state:CacheType,index:number){
+
+    },
     // 关闭其他
     CLOSE_ELSE_ITEM(state:CacheType,index:number){
         state.tagsViewsAry.splice(index,1)
+        state.cacheViewsAry.splice(index,1)
     },
     // 批量关闭
     CLOSE_BATCH_ITEM(state:CacheType,type:string){},
@@ -49,10 +53,22 @@ const actions = {
             commit('ADD_TAGS_ITEM',data)
         }  
     },
-    closeTagsItem({state,commit}:any,data:TagsType){
+    closeElseTagsItem({state,commit}:any,data:TagsType){
         const index = state.cacheViewsAry.indexOf(data.name)
         commit('CLOSE_ELSE_ITEM',index)
     },
+    closeSelfTagsItem({state,commit}:any,index:number){
+        let redirectRoute:TagsType
+        if(state.tagsViewsAry.length -1 > index){
+            redirectRoute = state.tagsViewsAry[index + 1]
+        }else{
+            redirectRoute = state.tagsViewsAry[index -1]
+        }
+        commit('CLOSE_ELSE_ITEM',index)
+        return new Promise(resolve => {
+            resolve(redirectRoute)
+        })
+    }
 }
 export default {
     namespaced: true,

@@ -1,7 +1,7 @@
 <template>
   <div class="tags-components">
     <router-link 
-    v-for="item in tagsAry" 
+    v-for="(item,index) in tagsAry" 
     :key="item.name" 
     :to="{ path: item.path }" 
     :class="[isActive(item) ? 'active' : '','tags-view-item']">
@@ -9,7 +9,7 @@
       <i 
       v-if="!item.isFixdeKeepAlive" 
       class="el-icon-circle-close"
-      @click.prevent.stop="closeTagItem(item)"
+      @click.prevent.stop="closeTagItem(item,index)"
       ></i>
     </router-link>
   </div>
@@ -17,23 +17,27 @@
 <script lang="ts" setup>
 import { computed, watch } from "vue"
 import { useStore } from "vuex"
-import { useRoute } from "vue-router"
+import { useRoute,useRouter } from "vue-router"
 import TagsType from "store/modules/tagsView"
 const store = useStore()
 const route = useRoute()
+const router = useRouter()
 const tagsAry = computed(() => store.getters.tagsViewsAry)
 
 const isActive = (item: TagsType): boolean => {
   return item.path === route.path
 }
-const closeTagItem = (item: TagsType): void => {
+const closeTagItem = <T,R>(item: T,index:R): void => {
   if(isActive(item)){
     // 关闭自身
-    console.log('关闭自身')
+    store.dispatch('tagsView/closeSelfTagsItem', index).then(resp => {
+      router.push({
+        path:resp.path
+      })
+    })
   }else{
     // 关闭其他
-    console.log('关闭其他')
-    store.dispatch('tagsView/closeTagsItem', item)
+    store.dispatch('tagsView/closeElseTagsItem', item)
   }
 }
 const getTagsView = () => {

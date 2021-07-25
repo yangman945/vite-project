@@ -1,22 +1,23 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
 import Layout from "lays/index.vue"
 import AppMain from "lays/components/AppMain.vue"
+declare module "vue-router" {
+  interface RouteMeta {
+  // 路由标题
+  title?: string
+  // 是否缓存路由
+  keepAlive?: boolean
+  // 是否固定标签
+  isFixdeKeepAlive?: boolean
+}
+}
 export type AppRouteRecordRaw = RouteRecordRaw & {
   // 是否隐藏
   hidden?: boolean
   // 路由名称
   name: string
 }
-declare module "vue-router" {
-  interface RouteMeta {
-    // 路由标题
-    title?: string
-    // 是否缓存路由
-    keepAlive?: boolean
-    // 是否固定标签
-    isFixdeKeepAlive?: boolean
-  }
-}
+
 type BreadcrumbItem = {
   path: string
   meta: unknown
