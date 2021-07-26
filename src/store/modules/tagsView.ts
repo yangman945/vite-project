@@ -10,7 +10,7 @@ export type TagsType = {
     path:string,
     title:string,
     name:string,
-    isFixdeKeepAlive:boolean
+    isAffix:boolean
 }
 const state:CacheType = {
     cacheViewsAry:[],

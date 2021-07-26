@@ -8,7 +8,7 @@ declare module "vue-router" {
   // 是否缓存路由
   keepAlive?: boolean
   // 是否固定标签
-  isFixdeKeepAlive?: boolean
+  isAffix?: boolean
 }
 }
 export type AppRouteRecordRaw = RouteRecordRaw & {
@@ -37,7 +37,7 @@ export const routes = [
         meta: {
           title: "首页",
           keepAlive: true,
-          isFixdeKeepAlive: true
+          isAffix: true
         }
       },
       {

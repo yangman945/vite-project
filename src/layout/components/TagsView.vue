@@ -1,43 +1,51 @@
 <template>
   <div class="tags-components">
-    <router-link 
-    v-for="(item,index) in tagsAry" 
-    :key="item.name" 
-    :to="{ path: item.path }" 
-    :class="[isActive(item) ? 'active' : '','tags-view-item']">
+    <router-link
+      v-for="(item, index) in tagsAry"
+      :key="item.name"
+      :to="{ path: item.path }"
+      :class="[isActive(item) ? 'active' : '', 'tags-view-item']"
+      @contextmenu.prevent="openTagMenu(item, $event)"
+    >
       <span>{{ item.title }}</span>
-      <i 
-      v-if="!item.isFixdeKeepAlive" 
-      class="el-icon-circle-close"
-      @click.prevent.stop="closeTagItem(item,index)"
-      ></i>
+      <i v-if="!item.isAffix" class="el-icon-circle-close" @click.prevent.stop="closeTagsItem(item, index)"></i>
     </router-link>
+    <!-- <transition name="el-zoom-in-top"> -->
+    <ul v-show="tagMenuShow">
+      <li>关闭当前页面</li>
+      <li>关闭左侧页面</li>
+      <li>关闭右侧页面</li>
+      <li>关闭全部</li>
+    </ul>
+    <!-- </transition>  -->
   </div>
 </template>
 <script lang="ts" setup>
 import { computed, watch } from "vue"
 import { useStore } from "vuex"
-import { useRoute,useRouter } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
+import { routes } from "@/router"
 import TagsType from "store/modules/tagsView"
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
+let tagMenuShow = false
+let affixAry:TagsType = []
 const tagsAry = computed(() => store.getters.tagsViewsAry)
-
 const isActive = (item: TagsType): boolean => {
   return item.path === route.path
 }
-const closeTagItem = <T,R>(item: T,index:R): void => {
-  if(isActive(item)){
+const closeTagsItem = <T, R>(item: T, index: R): void => {
+  if (isActive(item)) {
     // 关闭自身
-    store.dispatch('tagsView/closeSelfTagsItem', index).then(resp => {
+    store.dispatch("tagsView/closeSelfTagsItem", index).then((resp) => {
       router.push({
-        path:resp.path
+        path: resp.path
       })
     })
-  }else{
+  } else {
     // 关闭其他
-    store.dispatch('tagsView/closeElseTagsItem', item)
+    store.dispatch("tagsView/closeElseTagsItem", item)
   }
 }
 const getTagsView = () => {
@@ -46,16 +54,62 @@ const getTagsView = () => {
     path: path,
     name: name,
     title: meta.title,
-    isFixdeKeepAlive: meta.isFixdeKeepAlive ? true : false
+    isAffix: meta.isAffix ? true : false
   }
   store.dispatch("tagsView/createTags", tagsItem)
   store.dispatch("tagsView/createCacheView", name)
 }
+const getAffixTags = (routers:any[]) => {
+  let affixTags: TagsType[] = []
+  routers.forEach((routeItem ) => {
+    
+    if (routeItem.meta.isAffix) {
+      affixTags.push({
+        path: routeItem.path,
+        name: routeItem.name,
+        title: routeItem.meta.title,
+        isAffix: routeItem.meta.isAffix ? true : false
+      })
+    }
+  })
+  return affixTags
+}
+const initTags = () => {
+  affixAry = getAffixTags(routes[0].children)
+  console.log(affixAry,"affixAry")
+  affixAry.forEach((item:TagsType) => {
+  store.dispatch("tagsView/createTags", item)
+  store.dispatch("tagsView/createCacheView", item.name)
+  })
+}
+const openTagMenu = <T, R>(item: T, e: R) => {
+  console.log(tagMenuShow, "鼠标右击item")
+  console.log(e, "鼠标右击e")
+}
+
 watch(() => route.path, getTagsView)
+watch(
+  () => tagMenuShow,
+  (value) => {
+    if (value) {
+      document.body.addEventListener("click", () => {
+        console.log("监听1")
+        tagMenuShow = false
+      })
+    } else {
+      document.body.removeEventListener("click", () => {
+        console.log("监听2")
+        tagMenuShow = false
+      })
+    }
+  }
+)
+initTags()
 getTagsView()
 </script>
 <style lang="scss" scoped>
 .tags-components {
+  position: relative;
   .tags-view-item {
     display: inline-block;
     position: relative;
@@ -72,11 +126,23 @@ getTagsView()
     margin-top: 4px;
     box-sizing: border-box;
     &.active {
-        background-color: #5DDAB4;
-        color: #fff;
-      }
-    i{
+      background-color: #5ddab4;
+      color: #fff;
+    }
+    i {
       font-size: 20px;
+    }
+  }
+  ul {
+    z-index: 9;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    padding: 20px;
+    margin: 0;
+    background-color: #e4e4e4;
+    li {
     }
   }
 }
