@@ -19,7 +19,7 @@
 import AppMain from "./components/AppMain.vue"
 import NavMenu from "./components/NavMenu.vue"
 import Breadcrumb from "./components/Breadcrumb.vue"
-import TagsView from "./components/TagsView.vue"
+import TagsView from "./components/TagsView/index.vue"
 </script>
 <style lang="scss" scoped>
 #app-wrapper {

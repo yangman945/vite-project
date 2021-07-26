@@ -5,13 +5,17 @@
       :key="item.name"
       :to="{ path: item.path }"
       :class="[isActive(item) ? 'active' : '', 'tags-view-item']"
-      @contextmenu.prevent="openTagMenu(item, $event)"
+      @contextmenu.prevent="tagsData.openTagMenu(item, $event)"
     >
       <span>{{ item.title }}</span>
-      <i v-if="!item.isAffix" class="el-icon-circle-close" @click.prevent.stop="closeTagsItem(item, index)"></i>
+      <i
+        v-if="!item.isAffix"
+        class="el-icon-circle-close"
+        @click.prevent.stop="closeTagsItem(item, index)"
+      ></i>
     </router-link>
     <!-- <transition name="el-zoom-in-top"> -->
-    <ul v-show="tagMenuShow">
+    <ul v-show="tagsData.tagMenuShow">
       <li>关闭当前页面</li>
       <li>关闭左侧页面</li>
       <li>关闭右侧页面</li>
@@ -21,16 +25,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, watch } from "vue"
+import { computed, watch, ref, reactive } from "vue"
 import { useStore } from "vuex"
 import { useRoute, useRouter } from "vue-router"
 import { routes } from "@/router"
 import TagsType from "store/modules/tagsView"
+import { tagsData } from './index'
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
-let tagMenuShow = false
-let affixAry:TagsType = []
+let affixAry: TagsType = []
 const tagsAry = computed(() => store.getters.tagsViewsAry)
 const isActive = (item: TagsType): boolean => {
   return item.path === route.path
@@ -59,10 +63,10 @@ const getTagsView = () => {
   store.dispatch("tagsView/createTags", tagsItem)
   store.dispatch("tagsView/createCacheView", name)
 }
-const getAffixTags = (routers:any[]) => {
+const getAffixTags = (routers: any[]) => {
   let affixTags: TagsType[] = []
-  routers.forEach((routeItem ) => {
-    
+  routers.forEach((routeItem) => {
+
     if (routeItem.meta.isAffix) {
       affixTags.push({
         path: routeItem.path,
@@ -76,30 +80,23 @@ const getAffixTags = (routers:any[]) => {
 }
 const initTags = () => {
   affixAry = getAffixTags(routes[0].children)
-  console.log(affixAry,"affixAry")
-  affixAry.forEach((item:TagsType) => {
-  store.dispatch("tagsView/createTags", item)
-  store.dispatch("tagsView/createCacheView", item.name)
+  console.log(affixAry, "affixAry")
+  affixAry.forEach((item: TagsType) => {
+    store.dispatch("tagsView/createTags", item)
+    store.dispatch("tagsView/createCacheView", item.name)
   })
 }
-const openTagMenu = <T, R>(item: T, e: R) => {
-  console.log(tagMenuShow, "鼠标右击item")
-  console.log(e, "鼠标右击e")
-}
-
 watch(() => route.path, getTagsView)
 watch(
-  () => tagMenuShow,
+  () => tagsData.tagMenuShow,
   (value) => {
     if (value) {
       document.body.addEventListener("click", () => {
-        console.log("监听1")
-        tagMenuShow = false
+        tagsData.tagMenuShow = false
       })
     } else {
       document.body.removeEventListener("click", () => {
-        console.log("监听2")
-        tagMenuShow = false
+        tagsData.tagMenuShow = false
       })
     }
   }
