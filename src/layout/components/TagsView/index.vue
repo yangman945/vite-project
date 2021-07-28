@@ -14,14 +14,15 @@
         @click.prevent.stop="closeTagsItem(item, index)"
       ></i>
     </router-link>
-    <!-- <transition name="el-zoom-in-top"> -->
+    <transition name="el-zoom-in-top">
     <ul v-show="tagsData.tagMenuShow">
-      <li>关闭当前页面</li>
-      <li>关闭左侧页面</li>
-      <li>关闭右侧页面</li>
-      <li>关闭全部</li>
+      <li 
+      v-for="menu in tagsData.tagMenuAry" 
+      :key="menu.value"
+      @click="tagsData.clearTagsItem(menu.value)"
+      >{{menu.name}}</li>
     </ul>
-    <!-- </transition>  -->
+    </transition> 
   </div>
 </template>
 <script lang="ts" setup>
@@ -135,11 +136,18 @@ getTagsView()
     position: absolute;
     top: 0;
     left: 0;
-    width: 120px;
-    padding: 20px;
-    margin: 0;
-    background-color: #e4e4e4;
+    padding: 5px 0;
+    border-radius: 0px 5px 5px 5px;
+    background-color: #a4d3d0;
+    color:#474e4f;
     li {
+      padding: 0 20px;
+      line-height: 25px;
+      cursor: pointer;
+      &:hover{
+        color:#fdfdfd;
+        background-color: #77beb9;
+      }
     }
   }
 }

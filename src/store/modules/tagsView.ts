@@ -1,10 +1,9 @@
-import { resolve } from "path/posix"
 import {Module} from "vuex"
 import { State } from ".."
 
 export type CacheType = {
-    cacheViewsAry:string[] // 缓存页面数组
-    tagsViewsAry:TagsType[], // 选项标签数组
+    cacheViewsAry:string[]
+    tagsViewsAry:TagsType[],
 }
 export type TagsType = {
     path:string,
@@ -33,7 +32,13 @@ const mutations = {
         state.cacheViewsAry.splice(index,1)
     },
     // 批量关闭
-    CLOSE_BATCH_ITEM(state:CacheType,type:string){},
+    CLOSE_BATCH_ITEM(state:CacheType,type:string){
+
+    },
+    CLOSE_ALL_ITEM(state:CacheType){
+        state.tagsViewsAry = []
+        state.cacheViewsAry = []
+    }
 }
 const actions = {
     // 校验当前访问的路由是否已经存在
@@ -68,7 +73,14 @@ const actions = {
         return new Promise(resolve => {
             resolve(redirectRoute)
         })
-    }
+    },
+    closeAllItem({state,commit}:any){
+        let redirectRoute:TagsType = state.tagsViewsAry[0]
+        commit('CLOSE_ALL_ITEM')
+        return new Promise(resolve => {
+            resolve(redirectRoute)
+        })
+    },
 }
 export default {
     namespaced: true,
